@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: klodpler-issuer
+  name: affine
+  namespace: default
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - note.jri.one
+    secretName: affine-tls
+  rules:
+  - host: note.jri.one
+    http:
+      paths:
+      - backend:
+          service:
+            name: affine
+            port:
+              number: 3010
+        path: /
+        pathType: Prefix
