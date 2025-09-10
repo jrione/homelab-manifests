@@ -10,7 +10,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 kubectl create namespace observability
 ```
 ```
-kubectl create configmap -n observability alloy-logging --from-file=logs.alloy --from-file=other-config.alloy  --dry-run=client -oyaml | kubectl apply -f -
+kubectl create configmap alloy-configmap -n observability alloy-logging --from-file=logs.alloy --from-file=other-config.alloy --dry-run=client -oyaml | kubectl apply -f -
 ```
 
 3. Install Alloy via Helm

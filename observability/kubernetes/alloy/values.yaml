@@ -12,9 +12,9 @@ alloy:
   configMap:
     create: false
     extraVolumes:
-    - name: config-logging
+    - name: alloy-config
       configMap:
-        name: alloy-config
+        name: alloy-configmap
     extraVolumeMounts:
-    - name: config-logging
+    - name: alloy-config
       mountPath: /etc/alloy/config.d/custom-config
