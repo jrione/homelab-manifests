@@ -1,0 +1,20 @@
+controller:
+  type: 'daemonset'
+#  tolerations:
+#    - key: "node-role.kubernetes.io/control-plane"
+#      operator: "Exists"
+#      effect: "NoSchedule"
+#    - key: "node-role.kubernetes.io/master"
+#      operator: "Exists"
+#      effect: "NoSchedule"
+
+alloy:
+  configMap:
+    create: false
+    extraVolumes:
+    - name: config-logging
+      configMap:
+        name: alloy-config
+    extraVolumeMounts:
+    - name: config-logging
+      mountPath: /etc/alloy/config.d/custom-config

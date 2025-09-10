@@ -1,0 +1,55 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9095
+  log_format: logfmt
+  log_level: info
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /var/loki
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2025-01-01
+      store: boltdb-shipper
+      object_store: s3
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+storage_config:
+  aws:
+    s3: s3://S3_ACCESS_KEY:S3_SECRET_KEY@S3_URL/S3_BUCKET_NAME
+    s3forcepathstyle: true
+    endpoint: https://S3_URL
+  boltdb_shipper:
+    active_index_directory: /var/loki/index    # cache index lokal
+    cache_location: /var/loki/cache
+
+ingester:
+  lifecycler:
+    ring:
+      replication_factor: 1
+  chunk_idle_period: 30m
+  chunk_retain_period: 1m
+  max_chunk_age: 1h
+  wal:
+    enabled: true
+    dir: /var/loki/wal
+
+compactor:
+  working_directory: /var/loki/compactor
+  retention_enabled: true
+  retention_delete_delay: 2h
+  delete_request_store: s3
+
+limits_config:
+  retention_period: 2160h
+  allow_structured_metadata: false
