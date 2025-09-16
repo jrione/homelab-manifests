@@ -1,0 +1,40 @@
+fullnameOverride: "NiggaProject"
+replicaCount: 1
+tolerations:
+  - key: "node-role.kubernetes.io/control-plane"
+    operator: "Exists"
+    effect: "NoSchedule"
+postgresql:
+  enabled: false
+api:
+  env:
+    database:
+      external:
+        enabled: true
+        host: "cnpg-postgres.cnpg-system.svc.cluster.local"
+        port: 5432
+        username: "kaneo"
+        password: "1n1P@ssw0rdK4neo"
+        database: "kaneo"
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: true
+    cert-manager.io/cluster-issuer: klodpler-issuer
+  hosts:
+    - host: "project.jri.one"
+      paths:
+        - path: /?(.*)
+          pathType: ImplementationSpecific
+          service: web
+          port: 80
+        - path: /api/?(.*)
+          pathType: ImplementationSpecific
+          service: api
+          port: 1337
+  tls:
+    - hosts:
+      - note.jri.one
+      secretName: affine-tls
