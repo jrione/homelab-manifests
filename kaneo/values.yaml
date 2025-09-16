@@ -1,4 +1,4 @@
-fullnameOverride: "NiggaProject"
+fullnameOverride: "nigga-project"
 replicaCount: 1
 tolerations:
   - key: "node-role.kubernetes.io/control-plane"
@@ -8,20 +8,25 @@ postgresql:
   enabled: false
 api:
   env:
+    jwtAccess: change_me
+    disableRegistration: true
     database:
       external:
-        enabled: true
-        host: "cnpg-postgres.cnpg-system.svc.cluster.local"
+        enabled: "true"
+        host: "cnpg-cluster-rw.database.svc.cluster.local"
         port: 5432
-        username: "kaneo"
-        password: "1n1P@ssw0rdK4neo"
+        username: "kaneo_user"
+        password: "apacoba"
         database: "kaneo"
+web:
+  env:
+    apiUrl: "https://project.jri.one"
 ingress:
-  enabled: true
+  enabled: "true"
   className: nginx
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
-    nginx.ingress.kubernetes.io/use-regex: true
+    nginx.ingress.kubernetes.io/use-regex: "true"
     cert-manager.io/cluster-issuer: klodpler-issuer
   hosts:
     - host: "project.jri.one"
@@ -36,5 +41,5 @@ ingress:
           port: 1337
   tls:
     - hosts:
-      - note.jri.one
-      secretName: affine-tls
+      - project.jri.one
+      secretName: kaneo-tls
