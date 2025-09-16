@@ -1,0 +1,28 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+otelcol.receiver.otlp "oltp_commerce" {
+    http {
+        endpoint = "0.0.0.0:4818"
+    }
+    output {
+        traces = [otelcol.processor.batch.traces_commerce.input]
+    }
+}
+
+otelcol.processor.batch "traces_commerce" {
+  output {
+    traces = [otelcol.exporter.otlp.jaeger.input]
+  }
+}
+
+otelcol.exporter.otlp "jaeger" {
+  client {
+    endpoint = "172.19.4.163:4317"
+    tls {
+      insecure = true
+    }
+  }
+}

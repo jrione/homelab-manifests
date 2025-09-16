@@ -1,0 +1,22 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cnpg-cluster
+  namespace: database
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.4
+  storage:
+    storageClass: nfs-client
+    size: 10Gi
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: cnpg-cluster-superuser
+  bootstrap:
+    initdb:
+      postInitTemplateSQL: |
+        CREATE EXTENSION IF NOT EXISTS vector;
+      database: app
+      owner: appuser
+      secret:
+        name: appuser-secret

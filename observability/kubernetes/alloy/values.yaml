@@ -11,10 +11,4 @@ controller:
 alloy:
   configMap:
     create: false
-    extraVolumes:
-    - name: alloy-config
-      configMap:
-        name: alloy-configmap
-    extraVolumeMounts:
-    - name: alloy-config
-      mountPath: /etc/alloy/config.d/custom-config
+    name: "alloy-configmap"

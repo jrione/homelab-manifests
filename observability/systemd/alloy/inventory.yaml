@@ -1,0 +1,22 @@
+all:
+  vars:
+    ansible_user: ubuntu
+    ansible_password: thispassword
+    ansible_become_pass: thispassword
+    _version: "1.32"
+    _cidr: "10.244.0.0/16"
+
+  children:
+    master:
+      hosts:
+        10.10.51.240:
+    worker:
+      hosts:
+        #10.10.51.241:   # masih dikomentari (tidak akan dibaca Ansible)
+        10.10.51.242:
+        10.10.51.243:
+    all_server:
+      children:
+        master:
+        worker:
+
