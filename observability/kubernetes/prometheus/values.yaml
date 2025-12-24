@@ -1,0 +1,30 @@
+alertmanager:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: true
+
+kube-state-metrics:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: true
+
+server:
+  extraArgs:
+    web.enable-remote-write-receiver: "" # use this remoteWrite configuration if u use Grafana Tempo/Alloy OTLP
+  retention: 30d
+  retentionSize: "20GB"
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 25Gi
+    storageClass: "nfs-client"
+
+
+extraScrapeConfigs: |
+  - job_name: 'alloy-otlp-metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['prometheus-pushgateway.monitoring.svc:9091']

@@ -1,22 +1,25 @@
 all:
   vars:
-    ansible_user: ubuntu
-    ansible_password: thispassword
-    ansible_become_pass: thispassword
-    _version: "1.32"
-    _cidr: "10.244.0.0/16"
+    ansible_user: devops
+    ansible_password: T1m4Pp!?
+    ansible_become_pass: T1m4Pp!?
 
   children:
-    master:
+    hris:
       hosts:
-        10.10.51.240:
-    worker:
+        172.16.11.66:
+        172.16.11.67:
+    rds:
       hosts:
-        #10.10.51.241:   # masih dikomentari (tidak akan dibaca Ansible)
-        10.10.51.242:
-        10.10.51.243:
-    all_server:
-      children:
-        master:
-        worker:
+        172.18.56.50:
+        172.18.56.51:
+        172.18.56.52:
+        172.18.56.53:
+        172.18.56.54:
+        172.18.56.55:
+        172.18.56.56:
+        172.18.56.57:
+        172.18.56.58:
+        172.18.56.59:
+        172.18.56.80:
 

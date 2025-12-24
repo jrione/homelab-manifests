@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: klodpler-issuer
+  name: ingress-alloy
+  namespace: observability
+spec:
+  tls:
+  - hosts:
+    - alloy.jri.one
+    secretName: alloy-tls
+  - hosts:
+    - gw-trace.jri.one
+    secretName: gw-trace-tls
+  ingressClassName: nginx
+  rules:
+  - host: alloy.jri.one
+    http:
+      paths:
+      - backend:
+          service:
+            name: alloy
+            port:
+              number: 12345
+        path: /
+        pathType: Prefix
+  - host: gw-trace.jri.one
+    http:
+      paths:
+      - backend:
+          service:
+            name: alloy
+            port:
+              number: 4818
+        path: /
+        pathType: Prefix

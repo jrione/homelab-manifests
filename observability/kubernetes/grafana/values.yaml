@@ -1,0 +1,5 @@
+persistence:
+  type: pvc
+  enabled: true
+  storageClassName: nfs-client
+  size: 5Gi

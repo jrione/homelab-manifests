@@ -3,26 +3,38 @@ logging {
   format = "logfmt"
 }
 
-otelcol.receiver.otlp "oltp_commerce" {
+otelcol.receiver.otlp "oltp_gw" {
     http {
         endpoint = "0.0.0.0:4818"
     }
     output {
-        traces = [otelcol.processor.batch.traces_commerce.input]
+        metrics = [otelcol.exporter.prometheus.metrics_prometheus.input]
+        traces = [otelcol.processor.batch.traces_tempo.input]
     }
 }
 
-otelcol.processor.batch "traces_commerce" {
-  output {
-    traces = [otelcol.exporter.otlp.jaeger.input]
+otelcol.exporter.otlp "traces_tempo" {
+  client {
+    endpoint = "tempo.observability.svc:4317"
+    tls {
+      insecure              = true
+      insecure_skip_verify	= true
+    }
   }
 }
 
-otelcol.exporter.otlp "jaeger" {
-  client {
-    endpoint = "172.19.4.163:4317"
-    tls {
-      insecure = true
-    }
+otelcol.processor.batch "traces_tempo" {
+  output {
+    traces = [otelcol.exporter.otlp.traces_tempo.input]
+  }
+}
+
+otelcol.exporter.prometheus "metrics_prometheus" {
+  forward_to = [prometheus.remote_write.prometheus.receiver]
+}
+
+prometheus.remote_write "prometheus" {
+  endpoint {
+    url = "http://prometheus-server.monitoring.svc/api/v1/write" 
   }
 }

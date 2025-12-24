@@ -3,27 +3,30 @@ logging {
   format = "logfmt"
 }
 
-otelcol.receiver.otlp "oltp_commerce" {
+otelcol.receiver.otlp "oltp_gw" {
     http {
         endpoint = "0.0.0.0:4818"
     }
     output {
-        traces = [otelcol.processor.batch.traces_commerce.input]
+        metrics = [otelcol.processor.batch.traces_tempo.input]
+        traces = [otelcol.processor.batch.traces_tempo.input]
     }
 }
 
-otelcol.processor.batch "traces_commerce" {
-  output {
-    traces = [otelcol.exporter.otlp.jaeger.input]
+otelcol.exporter.otlp "traces_tempo" {
+  client {
+    endpoint = "tempo.observability.svc:4317"
+    tls {
+      insecure              = true
+      insecure_skip_verify	= true
+    }
   }
 }
 
-otelcol.exporter.otlp "jaeger" {
-  client {
-    endpoint = "172.19.4.163:4317"
-    tls {
-      insecure = true
-    }
+otelcol.processor.batch "traces_tempo" {
+  output {
+    metrics = [otelcol.exporter.otlp.traces_tempo.input]
+    traces = [otelcol.exporter.otlp.traces_tempo.input]
   }
 }
 
@@ -52,7 +55,6 @@ discovery.relabel "pod_logs" {
     target_label = "pod"
   }
 
-  // Label creation - "container" field from "__meta_kubernetes_pod_container_name"
   rule {
     source_labels = ["__meta_kubernetes_pod_container_name"]
     action = "replace"
@@ -110,6 +112,11 @@ loki.process "pod_logs" {
       }
   }
 
+   stage.timestamp {
+    source = "ts"
+    format = "RFC3339"
+    location = "Asia/Jakarta"
+  }
+
   forward_to = [loki.write.loki_commerce.receiver]
 }
-

@@ -1,2 +1,4 @@
 kaneo/kaneo_repo/
 kaneo/values.yaml.local
+
+observability/systemd/tempo/
